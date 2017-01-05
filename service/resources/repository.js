@@ -15,7 +15,8 @@ let Common = require('../common/commons');
 module.exports = {
     queryInfo,
     createRepo,
-    queryMyRepos
+    queryMyRepos,
+    queryRepos
 }
 
 function *queryInfo(id) {
@@ -63,4 +64,51 @@ function *queryMyRepos(uid, queryStr, offset, limit) {
     yield Common.fillUserInfo(resultPage);
     yield Common.fillRepoLikesInfo(resultPage, false, true);
     return resultPage;
+}
+
+function *queryRepos(uid, queryStr, currentPage, pageSize) {
+    let offset = currentPage * pageSize;
+    let limit = (currentPage + 1) * pageSize;
+    let queryParam = {
+    };
+
+    if(uid){
+        queryParam.u_id = uid;
+    }
+    if(queryStr) {
+        queryParam.name = new RegExp(queryStr);
+    }
+
+    let resultPage = yield Repository.find(queryParam)
+        .sort({create_at: -1})
+        .skip(offset)
+        .limit(limit)
+        .exec();
+
+    let totalCount = yield Repository.find(queryParam)
+        .count().exec();
+
+    resultPage = _.invokeMap(resultPage, 'toObject');
+
+    if(resultPage) {
+        for (var i = 0, item; (item = resultPage[i]) != null; i++){
+            item.text = item.description;
+            delete item.description;
+
+            let createTime = item.created_at || new Date();
+            let created_at = createTime.getTime() / 1000;
+            item.created_at = created_at;
+        }
+    }
+
+    yield Common.fillUserInfo(resultPage);
+    let retJson = {
+        success: true,
+        page: {
+            current: currentPage,
+            total: parseInt(totalCount / pageSize) + 1
+        },
+        data: resultPage
+    };
+    return retJson;
 }
