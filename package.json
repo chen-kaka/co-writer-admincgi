@@ -11,6 +11,7 @@
     "bluebird": "^3.4.6",
     "bson": "^0.5.7",
     "co": "^4.6.0",
+    "gridfs-stream": "^1.1.1",
     "joi": "^9.0.4",
     "koa": "^1.2.0",
     "koa-better-body": "^3.0.2",
@@ -27,7 +28,6 @@
     "request-debug": "^0.2.0",
     "request-promise": "^4.1.1",
     "require-tree": "^1.1.1",
-    "gridfs-stream": "^1.1.1",
     "winston": "^2.2.0"
   },
   "devDependencies": {
