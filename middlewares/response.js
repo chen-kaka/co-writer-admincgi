@@ -5,7 +5,8 @@ module.exports = function*(next) {
   try {
     yield next;
     //h5 跨域
-    this.set("Access-Control-Allow-Origin", "*");
+    this.set("Access-Control-Allow-Origin", "http://localhost:9000");
+    this.set("Access-Control-Allow-Credentials", true);
     if(this.rsp) {
       this.body = this.rsp;
     }

@@ -49,8 +49,8 @@ module.exports = router => {
      * http://localhost:9900/admin/user/login/logout
      */
     router.post('/logout', function *() {
-        this.cookies.remove('user_session', { path: '' })
-        this.cookies.remove('user_name', { path: '' })
+        this.cookies.set('user_session', '');
+        this.cookies.set('user_name','');
         Commons.formatAdminResp(this, 0, {
             success: true,
             message: "退出成功"
